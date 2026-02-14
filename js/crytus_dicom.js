@@ -45,8 +45,10 @@ app.registerExtension({
                         if (theNode._previewImage) {
                             const img = theNode._previewImage;
                             const maxW = widget_width - 20;
-                            const maxH = 200;
-                            const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+                            // Calculate available height from widget position to bottom of node
+                            const nodeH = theNode.size[1];
+                            const availableH = Math.max(50, nodeH - y - 10);
+                            const scale = Math.min(maxW / img.width, availableH / img.height);
                             const drawW = img.width * scale;
                             const drawH = img.height * scale;
                             const offsetX = (widget_width - drawW) / 2;
@@ -66,10 +68,10 @@ app.registerExtension({
                     computeSize() {
                         if (node._previewImage) {
                             const img = node._previewImage;
-                            const maxW = 200;
-                            const maxH = 200;
-                            const scale = Math.min(maxW / img.width, maxH / img.height, 1);
-                            return [200, img.height * scale + 10];
+                            const nodeW = node.size ? node.size[0] : 200;
+                            const maxW = Math.max(nodeW - 40, 100);
+                            const scale = Math.min(maxW / img.width, 1);
+                            return [nodeW, img.height * scale + 10];
                         }
                         return [200, 30];
                     },
@@ -136,6 +138,13 @@ app.registerExtension({
                     if (pathWidget && pathWidget.value) {
                         loadPreview(node, pathWidget.value);
                     }
+                };
+
+                // --- Redraw on resize to auto-fit preview ---
+                const origOnResize = node.onResize;
+                node.onResize = function (size) {
+                    origOnResize?.apply(this, arguments);
+                    app.graph.setDirtyCanvas(true);
                 };
             };
         }
