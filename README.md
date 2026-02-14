@@ -119,7 +119,7 @@ DICOM 形式の医用画像ファイルを読み込み、ComfyUI の IMAGE / MAS
    - 「**Select File**」ボタンをクリックしてダイアログから選択
    - `path` 入力欄にファイルパスを直接入力
    - DICOM ファイルをノードに**ドラッグ＆ドロップ**
-3. `Preview Image` ノードなどに接続して結果を確認
+3. `Preview Image` ロードした結果を確認
 
 ---
 
